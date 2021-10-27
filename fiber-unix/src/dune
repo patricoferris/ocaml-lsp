@@ -1,3 +1,4 @@
 (library
  (name fiber_unix)
- (libraries fiber dyn stdune threads.posix yojson))
+ (public_name ocaml-lsp-server.fiber_unix)
+ (libraries dune-private-libs.fiber dyn stdune-unstable threads.posix yojson))

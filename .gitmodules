@@ -3,8 +3,3 @@ path = ocaml-lsp-server/vendor/merlin
 url = https://github.com/rgrinberg/merlin
 branch = lsp
 ignore = dirty
-[submodule "submodules/dune"]
-path = submodules/dune
-url = https://github.com/rgrinberg/jbuilder
-branch=lsp
-ignore=dirty

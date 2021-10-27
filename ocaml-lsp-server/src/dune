@@ -1,10 +1,11 @@
 (library
  (name ocaml_lsp_server)
+ (public_name ocaml-lsp-server)
  (libraries
   dyn
   xdg
   dune-build-info
-  fiber
+  dune-private-libs.fiber
   fiber_unix
   jsonrpc
   spawn
@@ -25,12 +26,12 @@
   ppx_yojson_conv_lib
   re
   result
-  stdune
+  stdune-unstable
   csexp
   yojson
-  dune_rpc
-  csexp_rpc
+  dune-rpc
+  dune-private-libs.csexp_rpc
   ocamlformat-rpc-lib
-  ocamlc_loc))
+  dune-private-libs.ocamlc_loc))
 
 (include_subdirs unqualified)

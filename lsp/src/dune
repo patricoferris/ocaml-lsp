@@ -7,7 +7,7 @@
   jsonrpc
   ppx_yojson_conv_lib
   result
-  stdune
+  stdune-unstable
   dyn
   threads.posix
   uutf

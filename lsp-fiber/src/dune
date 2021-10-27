@@ -1,13 +1,14 @@
 (library
  (name lsp_fiber)
+ (public_name ocaml-lsp-server.lsp_fiber)
  (libraries
   dyn
-  fiber
+  dune-private-libs.fiber
   fiber_unix
   jsonrpc
   jsonrpc_fiber
   lsp
   ppx_yojson_conv_lib
   result
-  stdune
+  stdune-unstable
   yojson))
