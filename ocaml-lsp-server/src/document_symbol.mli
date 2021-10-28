@@ -1,4 +1,5 @@
 open Import
+open Merlin_query_protocol
 
 val symbols_of_outline :
   Uri.t -> Query_protocol.item list -> SymbolInformation.t list

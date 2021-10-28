@@ -1,4 +1,6 @@
 open Import
+open Merlin_kernel
+open Merlin_query_protocol
 
 type t
 

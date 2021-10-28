@@ -1,4 +1,5 @@
 open Import
+open Merlin_kernel
 open Fiber.O
 
 let infer_intf_for_impl doc =

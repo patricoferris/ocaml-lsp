@@ -1,4 +1,6 @@
 open Import
+open Merlin_query_commands
+open Merlin_query_protocol
 open Fiber.O
 
 let action_kind = "destruct"

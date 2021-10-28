@@ -1,3 +1,7 @@
+
+open Merlin_kernel
+open Merlin_query_protocol
+
 (** This module should be used to work with typed holes. The main goal is to
     hide syntactic representation of a typed hole, which may change in future *)
 
