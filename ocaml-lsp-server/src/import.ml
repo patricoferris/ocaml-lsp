@@ -1,3 +1,14 @@
+include struct
+  include Merlin_kernel
+  include Merlin_typing
+  include Merlin_parsing
+  include Merlin_specific
+  include Merlin_query_commands
+  include Merlin_query_protocol
+  include Merlin_merlin_utils
+  include Merlin_utils
+end
+
 (* All modules from [Stdune] should be in the struct below. The modules are
    listed alphabetically. Try to keep the order. *)
 include struct
@@ -40,7 +51,7 @@ end
 
 (* Misc modules *)
 module Drpc = Dune_rpc.V1
-module Loc = Location
+module Loc = Merlin_parsing.Location
 module Scheduler = Fiber_unix.Scheduler
 
 (* All modules from [Lsp_fiber] should be in the struct below. The modules are
