@@ -1,5 +1,5 @@
 [submodule "ocaml-lsp-server/vendor/merlin"]
 path = ocaml-lsp-server/vendor/merlin
-url = https://github.com/tmattio/merlin
-branch = public-libs
+url = https://github.com/patricoferris/merlin
+branch = 4.14+public-libs
 ignore = dirty
