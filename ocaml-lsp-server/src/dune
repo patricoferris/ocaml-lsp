@@ -34,6 +34,10 @@
   csexp
   yojson
   dune-rpc
+  dune-private-libs.csexp_rpc
+  ocamlformat
+  base
+  ocamlformat.ocamlformat_stdlib
   ocamlformat-rpc-lib
   dune-private-libs.ocamlc_loc))
 
