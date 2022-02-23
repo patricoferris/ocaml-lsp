@@ -49,7 +49,7 @@ module List = struct
   let filter_dup lst = filter_dup' ~equiv:(fun x -> x) lst
 end
 
-type directive = Dot_protocol.directive
+type directive = Merlin_dot_protocol.directive
 
 type config =
   { build_path : string list
@@ -201,9 +201,9 @@ type context =
 
 let get_config db { workdir; process_dir } path_abs =
   let query path (p : Process.t) =
-    Dot_protocol.Commands.send_file ~out_channel:p.stdin path;
+    Merlin_dot_protocol.Commands.send_file ~out_channel:p.stdin path;
     flush p.stdin;
-    Dot_protocol.read ~in_channel:p.stdout
+    Merlin_dot_protocol.read ~in_channel:p.stdout
   in
   let+ p = get_process db ~dir:process_dir in
   (* Both [p.initial_cwd] and [path_abs] have gone through
@@ -239,8 +239,8 @@ let get_config db { workdir; process_dir } path_abs =
   | Ok directives ->
     let cfg, failures = prepend_config ~dir:workdir directives empty_config in
     (postprocess_config cfg, failures)
-  | Error (Dot_protocol.Unexpected_output msg) -> (empty_config, [ msg ])
-  | Error (Dot_protocol.Csexp_parse_error _) ->
+  | Error (Merlin_dot_protocol.Unexpected_output msg) -> (empty_config, [ msg ])
+  | Error (Merlin_dot_protocol.Csexp_parse_error _) ->
     ( empty_config
     , [ "ocamllsp could not load its configuration from the external reader. \
          Building your project with `dune` might solve this issue."
@@ -288,7 +288,7 @@ let find_project_context start_dir =
   in
   loop None start_dir
 
-let get_external_config db (t : Mconfig.t) path =
+let get_external_config db (t : Merlin_kernel.Mconfig.t) path =
   Fiber.of_thunk (fun () ->
       let path = Misc.canonicalize_filename path in
       let directory = Filename.dirname path in
@@ -322,4 +322,4 @@ let get_external_config db (t : Mconfig.t) path =
           ; config_path = Some config_path
           }
         in
-        Mconfig.normalize { t with merlin })
+        Merlin_kernel.Mconfig.normalize { t with merlin })

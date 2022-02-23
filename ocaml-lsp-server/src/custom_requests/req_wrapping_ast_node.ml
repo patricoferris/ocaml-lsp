@@ -37,15 +37,15 @@ let on_request ~params state =
       let pos = Position.logical cursor_position in
       let+ node =
         Document.with_pipeline_exn doc (fun pipeline ->
-            let typer = Mpipeline.typer_result pipeline in
-            let pos = Mpipeline.get_lexing_pos pipeline pos in
+            let typer = Merlin_kernel.Mpipeline.typer_result pipeline in
+            let pos = Merlin_kernel.Mpipeline.get_lexing_pos pipeline pos in
             let enclosing_nodes (* from smallest node to largest *) =
-              Mbrowse.enclosing pos
-                [ Mbrowse.of_typedtree (Mtyper.get_typedtree typer) ]
+              Merlin_kernel.Mbrowse.enclosing pos
+                [ Merlin_kernel.Mbrowse.of_typedtree (Merlin_kernel.Mtyper.get_typedtree typer) ]
             in
             let loc_of_structure_item { Typedtree.str_loc; _ } = str_loc in
             let find_fst_structure_item_or_structure = function
-              | _, Browse_raw.Structure_item (str_item, _) ->
+              | _, Merlin_specific.Browse_raw.Structure_item (str_item, _) ->
                 Some (loc_of_structure_item str_item)
               | _, Structure { str_items; _ } -> (
                 match str_items with

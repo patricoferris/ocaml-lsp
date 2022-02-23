@@ -20,11 +20,11 @@ let code_action doc (params : CodeActionParams.t) =
       let+ structures =
         Document.with_pipeline_exn doc (fun pipeline ->
             let typedtree =
-              let typer = Mpipeline.typer_result pipeline in
-              Mtyper.get_typedtree typer
+              let typer = Merlin_kernel.Mpipeline.typer_result pipeline in
+              Merlin_kernel.Mtyper.get_typedtree typer
             in
-            let pos = Mpipeline.get_lexing_pos pipeline pos in
-            Mbrowse.enclosing pos [ Mbrowse.of_typedtree typedtree ])
+            let pos = Merlin_kernel.Mpipeline.get_lexing_pos pipeline pos in
+            Merlin_kernel.Mbrowse.enclosing pos [ Merlin_kernel.Mbrowse.of_typedtree typedtree ])
       in
       if not (Typed_hole.is_a_hole structures) then
         None

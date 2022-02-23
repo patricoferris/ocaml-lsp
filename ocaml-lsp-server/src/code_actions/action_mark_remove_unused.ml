@@ -2,19 +2,19 @@ open Import
 
 let slice doc (range : Range.t) =
   let src = Document.source doc in
-  let (`Offset start) = Msource.get_offset src @@ Position.logical range.start
-  and (`Offset end_) = Msource.get_offset src @@ Position.logical range.end_ in
-  String.sub (Msource.text src) ~pos:start ~len:(end_ - start)
+  let (`Offset start) = Merlin_kernel.Msource.get_offset src @@ Position.logical range.start
+  and (`Offset end_) = Merlin_kernel.Msource.get_offset src @@ Position.logical range.end_ in
+  String.sub (Merlin_kernel.Msource.text src) ~pos:start ~len:(end_ - start)
 
 (* Return contexts enclosing `pos` in order from most specific to most
    general. *)
 let enclosing_pos pipeline pos =
   let browse =
-    Mpipeline.typer_result pipeline
-    |> Mtyper.get_typedtree |> Mbrowse.of_typedtree
+    Merlin_kernel.Mpipeline.typer_result pipeline
+    |> Merlin_kernel.Mtyper.get_typedtree |> Merlin_kernel.Mbrowse.of_typedtree
   in
-  Mbrowse.enclosing
-    (Mpipeline.get_lexing_pos pipeline @@ Position.logical pos)
+  Merlin_kernel.Mbrowse.enclosing
+    (Merlin_kernel.Mpipeline.get_lexing_pos pipeline @@ Position.logical pos)
     [ browse ]
 
 (* `name` is an unused binding. `contexts` is a list of Mbrowse.t enclosing an
@@ -24,7 +24,7 @@ let enclosing_pos pipeline pos =
 let rec mark_value_unused_edit name contexts =
   let open Option.O in
   match contexts with
-  | Browse_raw.Pattern { pat_desc = Tpat_record (pats, _); _ } :: cs -> (
+  | Merlin_specific.Browse_raw.Pattern { pat_desc = Tpat_record (pats, _); _ } :: cs -> (
     let m_field_edit =
       List.find_map pats
         ~f:
@@ -88,7 +88,7 @@ let code_action_mark_value_unused doc (diagnostic : Diagnostic.t) =
 let enclosing_value_binding_range name =
   let open Option.O in
   List.find_map ~f:(function
-    | Browse_raw.Expression
+    | Merlin_specific.Browse_raw.Expression
         { exp_desc =
             Texp_let
               ( _

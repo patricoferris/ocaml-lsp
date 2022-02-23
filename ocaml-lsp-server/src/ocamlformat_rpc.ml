@@ -169,7 +169,7 @@ let format_type t ~typ =
         typ p)
 
 let format_doc t doc =
-  let txt = Document.source doc |> Msource.text in
+  let txt = Document.source doc |> Merlin_kernel.Msource.text in
   let path = Some (Document.uri doc |> Uri.to_path) in
   let* p = get_process t in
   match p with

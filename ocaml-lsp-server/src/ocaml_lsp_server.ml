@@ -176,7 +176,7 @@ let set_diagnostics rpc doc =
         in
         Document.with_pipeline_exn doc (fun pipeline ->
             match Query_commands.dispatch pipeline command with
-            | exception Extend_main.Handshake.Error error ->
+            | exception Merlin_extend.Extend_main.Handshake.Error error ->
               let message =
                 sprintf
                   "%s.\n\
@@ -345,7 +345,7 @@ let code_action (state : State.t) (params : CodeActionParams.t) =
         Fiber.map_reduce_errors
           ~on_error:(fun (exn : Exn_with_backtrace.t) ->
             match exn.exn with
-            | Extend_main.Handshake.Error error ->
+            | Merlin_extend.Extend_main.Handshake.Error error ->
               Fiber.return (Code_action_error.Need_merlin_extend error)
             | _ -> Fiber.return (Code_action_error.Exn exn))
           (module Code_action_error_monoid)
@@ -495,9 +495,9 @@ let signature_help (state : State.t)
   (* TODO use merlin resources efficiently and do everything in 1 thread *)
   let* application_signature =
     Document.with_pipeline_exn doc (fun pipeline ->
-        let typer = Mpipeline.typer_result pipeline in
-        let pos = Mpipeline.get_lexing_pos pipeline pos in
-        let node = Mtyper.node_at typer pos in
+        let typer = Merlin_kernel.Mpipeline.typer_result pipeline in
+        let pos = Merlin_kernel.Mpipeline.get_lexing_pos pipeline pos in
+        let node = Merlin_kernel.Mtyper.node_at typer pos in
         Merlin_analysis.Signature_help.application_signature node ~prefix)
   in
   match application_signature with
@@ -593,11 +593,11 @@ let rename (state : State.t)
         | { character = 0; _ } -> make_edit ()
         | pos -> (
           let mpos = Position.logical pos in
-          let (`Offset index) = Msource.get_offset source mpos in
+          let (`Offset index) = Merlin_kernel.Msource.get_offset source mpos in
           assert (index > 0)
           (* [index = 0] if we pass [`Logical (1, 0)], but we handle the case
              when [character = 0] in a separate matching branch *);
-          let source_txt = Msource.text source in
+          let source_txt = Merlin_kernel.Msource.text source in
           match source_txt.[index - 1] with
           | '~' (* the occurrence is a named argument *)
           | '?' (* is an optional argument *) ->
@@ -790,7 +790,7 @@ let ocaml_on_request :
   | DebugTextDocumentGet { textDocument = { uri }; position = _ } -> (
     match Document_store.get_opt store uri with
     | None -> now None
-    | Some doc -> now (Some (Msource.text (Document.source doc))))
+    | Some doc -> now (Some (Merlin_kernel.Msource.text (Document.source doc))))
   | DebugEcho params -> now params
   | TextDocumentColor _ -> now []
   | TextDocumentColorPresentation _ -> now []

@@ -15,19 +15,19 @@ let has_missing_rec pipeline pos_start =
   let open Option.O in
   (* Find identifier under cursor *)
   let* ident =
-    Compl.reconstruct_ident (Mpipeline.raw_source pipeline) pos_start
+    Compl.reconstruct_ident (Merlin_kernel.Mpipeline.raw_source pipeline) pos_start
   in
 
   (* Find most enclosing nonrecursive let binding that binds ident *)
-  let typer = Mpipeline.typer_result pipeline in
-  let browse = Mbrowse.of_typedtree (Mtyper.get_typedtree typer) in
-  Mbrowse.enclosing (Mpipeline.get_lexing_pos pipeline pos_start) [ browse ]
+  let typer = Merlin_kernel.Mpipeline.typer_result pipeline in
+  let browse = Merlin_kernel.Mbrowse.of_typedtree (Merlin_kernel.Mtyper.get_typedtree typer) in
+  Merlin_kernel.Mbrowse.enclosing (Merlin_kernel.Mpipeline.get_lexing_pos pipeline pos_start) [ browse ]
   |> List.find_map ~f:(function
        | ( _
-         , Browse_raw.Structure_item
+         , Merlin_specific.Browse_raw.Structure_item
              ({ str_desc = Tstr_value (Nonrecursive, bound); _ }, _) )
        | ( _
-         , Browse_raw.Expression
+         , Merlin_specific.Browse_raw.Expression
              { exp_desc = Texp_let (Nonrecursive, bound, _); _ } ) ->
          let bound_vars = let_bound_vars bound in
          if

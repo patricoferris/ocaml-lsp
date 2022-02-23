@@ -103,7 +103,7 @@ type t =
   | Other of Text_document.t * Syntax.t
   | Merlin of
       { tdoc : Text_document.t
-      ; pipeline : Mpipeline.t Lazy_fiber.t
+      ; pipeline : Merlin_kernel.Mpipeline.t Lazy_fiber.t
       ; merlin : Lev_fiber.Thread.t
       ; timer : Lev_fiber.Timer.Wheel.task
       ; merlin_config : Merlin_config.t
@@ -134,7 +134,7 @@ let timer = function
 
 let text t = Text_document.text (tdoc t)
 
-let source t = Msource.make (text t)
+let source t = Merlin_kernel.Msource.make (text t)
 
 let await task =
   let* () = Server.on_cancel (fun () -> Lev_fiber.Thread.cancel task) in
@@ -155,7 +155,7 @@ let with_pipeline (t : t) f =
     let* pipeline = Lazy_fiber.force t.pipeline in
     let* task =
       Lev_fiber.Thread.task t.merlin ~f:(fun () ->
-          Mpipeline.with_pipeline pipeline (fun () -> f pipeline))
+          Merlin_kernel.Mpipeline.with_pipeline pipeline (fun () -> f pipeline))
     in
     await task
 
@@ -169,7 +169,7 @@ let version t = Text_document.version (tdoc t)
 
 let make_config db uri =
   let path = Uri.to_path uri in
-  let mconfig = Mconfig.initial in
+  let mconfig = Merlin_kernel.Mconfig.initial in
   let path = Merlin_utils.Misc.canonicalize_filename path in
   let filename = Filename.basename path in
   let directory = Filename.dirname path in
@@ -189,7 +189,7 @@ let make_pipeline merlin_config thread tdoc =
       in
       let* async_make_pipeline =
         Lev_fiber.Thread.task thread ~f:(fun () ->
-            Text_document.text tdoc |> Msource.make |> Mpipeline.make config)
+            Text_document.text tdoc |> Merlin_kernel.Msource.make |> Merlin_kernel.Mpipeline.make config)
       in
       let+ res = await async_make_pipeline in
       match res with

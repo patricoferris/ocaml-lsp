@@ -35,14 +35,14 @@ val resolve :
       not.
     @return prefix of [position] in [source] and its length *)
 val prefix_of_position :
-  short_path:bool -> Msource.t -> [< Msource.position ] -> string
+  short_path:bool -> Merlin_kernel.Msource.t -> [< Merlin_kernel.Msource.position ] -> string
 
 (** [suffix_of_position source position] computes the suffix of the identifier
     after [position]. *)
-val suffix_of_position : Msource.t -> [< Msource.position ] -> string
+val suffix_of_position : Merlin_kernel.Msource.t -> [< Merlin_kernel.Msource.position ] -> string
 
 (** [reconstruct_ident source position] returns the identifier at [position].
     Note: [position] can be in the middle of the identifier.
 
     @return identifier unless none is found *)
-val reconstruct_ident : Msource.t -> [< Msource.position ] -> string option
+val reconstruct_ident : Merlin_kernel.Msource.t -> [< Merlin_kernel.Msource.position ] -> string option

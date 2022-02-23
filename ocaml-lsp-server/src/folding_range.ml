@@ -5,7 +5,7 @@ let folding_range { Range.start; end_ } =
   FoldingRange.create ~startLine:start.line ~startCharacter:start.character
     ~endLine:end_.line ~endCharacter:end_.character ~kind:Region ()
 
-let fold_over_parsetree (parsetree : Mreader.parsetree) =
+let fold_over_parsetree (parsetree : Merlin_kernel.Mreader.parsetree) =
   let ranges = ref [] in
   let push (range : Range.t) =
     if range.start.line < range.end_.line (* don't fold a single line *) then
@@ -231,7 +231,7 @@ let compute (state : State.t) (params : FoldingRangeParams.t) =
       let doc = Document_store.get state.store params.textDocument.uri in
       let+ ranges =
         Document.with_pipeline_exn doc (fun pipeline ->
-            let parsetree = Mpipeline.reader_parsetree pipeline in
+            let parsetree = Merlin_kernel.Mpipeline.reader_parsetree pipeline in
             fold_over_parsetree parsetree)
       in
       Some ranges)

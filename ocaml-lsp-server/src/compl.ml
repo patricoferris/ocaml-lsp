@@ -28,11 +28,11 @@ let completion_kind kind : CompletionItemKind.t option =
 
 (** @see <https://ocaml.org/manual/lex.html> reference *)
 let prefix_of_position ~short_path source position =
-  match Msource.text source with
+  match Merlin_kernel.Msource.text source with
   | "" -> ""
   | text ->
     let from =
-      let (`Offset index) = Msource.get_offset source position in
+      let (`Offset index) = Merlin_kernel.Msource.get_offset source position in
       min (String.length text - 1) (index - 1)
     in
     let pos =
@@ -102,10 +102,10 @@ let prefix_of_position ~short_path source position =
       reconstructed_prefix
 
 let suffix_of_position source position =
-  match Msource.text source with
+  match Merlin_kernel.Msource.text source with
   | "" -> ""
   | text ->
-    let (`Offset index) = Msource.get_offset source position in
+    let (`Offset index) = Merlin_kernel.Msource.get_offset source position in
     let len = String.length text in
     if index >= len then
       ""

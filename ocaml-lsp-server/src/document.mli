@@ -41,9 +41,9 @@ val uri : t -> Uri.t
 
 val text : t -> string
 
-val source : t -> Msource.t
+val source : t -> Merlin_kernel.Msource.t
 
-val with_pipeline_exn : t -> (Mpipeline.t -> 'a) -> 'a Fiber.t
+val with_pipeline_exn : t -> (Merlin_kernel.Mpipeline.t -> 'a) -> 'a Fiber.t
 
 val version : t -> int
 
@@ -66,7 +66,7 @@ val get_impl_intf_counterparts : Uri.t -> Uri.t list
 val edit : t -> TextEdit.t -> WorkspaceEdit.t
 
 val doc_comment :
-  t -> Msource.position -> (* doc string *) string option Fiber.t
+  t -> Merlin_kernel.Msource.position -> (* doc string *) string option Fiber.t
 
 type type_enclosing =
   { loc : Loc.t
@@ -74,4 +74,4 @@ type type_enclosing =
   ; doc : string option
   }
 
-val type_enclosing : t -> Msource.position -> type_enclosing option Fiber.t
+val type_enclosing : t -> Merlin_kernel.Msource.position -> type_enclosing option Fiber.t

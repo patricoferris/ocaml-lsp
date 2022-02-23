@@ -124,7 +124,7 @@ let run doc : (TextEdit.t list, error) result Fiber.t =
     let* formatter = formatter doc in
     let args = args formatter in
     let+ binary = binary formatter in
-    (binary, args, Document.source doc |> Msource.text)
+    (binary, args, Document.source doc |> Merlin_kernel.Msource.text)
   in
   match res with
   | Error e -> Fiber.return (Error e)

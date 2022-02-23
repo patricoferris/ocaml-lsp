@@ -26,7 +26,7 @@
    )* }}} *)
 open Import
 
-let browse_of_cmt (cmt_infos : Cmt_format.cmt_infos) : Browse_raw.node option =
+let browse_of_cmt (cmt_infos : Cmt_format.cmt_infos) : Merlin_specific.Browse_raw.node option =
   match cmt_infos.cmt_annots with
   | Implementation str -> Some (Structure str)
   | Interface sig_ -> Some (Signature sig_)
@@ -71,7 +71,7 @@ end = struct
   open Std
   open Option.Infix
   open Typedtree
-  open Browse_raw
+  open Merlin_specific.Browse_raw
   open Browse_tree
 
   let id_of_patt = function

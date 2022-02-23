@@ -8,15 +8,15 @@ let infer_intf_for_impl doc =
       "expected an implementation document, got an interface instead" []
   | Impl ->
     Document.with_pipeline_exn doc (fun pipeline ->
-        let typer = Mpipeline.typer_result pipeline in
+        let typer = Merlin_kernel.Mpipeline.typer_result pipeline in
         let sig_ : Types.signature =
-          let typedtree = Mtyper.get_typedtree typer in
+          let typedtree = Merlin_kernel.Mtyper.get_typedtree typer in
           match typedtree with
           | `Interface _ -> assert false
           | `Implementation doc -> doc.str_type
         in
-        let env = Mtyper.initial_env typer in
-        let verbosity = (Mpipeline.final_config pipeline).query.verbosity in
+        let env = Merlin_kernel.Mtyper.initial_env typer in
+        let verbosity = (Merlin_kernel.Mpipeline.final_config pipeline).query.verbosity in
         let module Printtyp = Merlin_analysis.Type_utils.Printtyp in
         Printtyp.wrap_printing_env ~verbosity env (fun () ->
             Format.asprintf "%a@." Printtyp.signature sig_))

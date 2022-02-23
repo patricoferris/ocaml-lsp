@@ -4,10 +4,10 @@ open Fiber.O
 let action_kind = "type-annotate"
 
 let check_typeable_context pipeline pos_start =
-  let pos_start = Mpipeline.get_lexing_pos pipeline pos_start in
-  let typer = Mpipeline.typer_result pipeline in
-  let browse = Mbrowse.of_typedtree (Mtyper.get_typedtree typer) in
-  match Mbrowse.enclosing pos_start [ browse ] with
+  let pos_start = Merlin_kernel.Mpipeline.get_lexing_pos pipeline pos_start in
+  let typer = Merlin_kernel.Mpipeline.typer_result pipeline in
+  let browse = Merlin_kernel.Mbrowse.of_typedtree (Merlin_kernel.Mtyper.get_typedtree typer) in
+  match Merlin_kernel.Mbrowse.enclosing pos_start [ browse ] with
   | (_, (Expression _ | Pattern _)) :: _ -> `Valid
   | _ :: _
   | [] ->
@@ -18,9 +18,9 @@ let get_source_text doc (loc : Loc.t) =
   let source = Document.source doc in
   let* start = Position.of_lexical_position loc.loc_start in
   let+ end_ = Position.of_lexical_position loc.loc_end in
-  let (`Offset start) = Msource.get_offset source (Position.logical start) in
-  let (`Offset end_) = Msource.get_offset source (Position.logical end_) in
-  String.sub (Msource.text source) ~pos:start ~len:(end_ - start)
+  let (`Offset start) = Merlin_kernel.Msource.get_offset source (Position.logical start) in
+  let (`Offset end_) = Merlin_kernel.Msource.get_offset source (Position.logical end_) in
+  String.sub (Merlin_kernel.Msource.text source) ~pos:start ~len:(end_ - start)
 
 let code_action_of_type_enclosing uri doc (loc, typ) =
   let open Option.O in
@@ -50,11 +50,11 @@ let code_action doc (params : CodeActionParams.t) =
         | `Invalid -> None
         | `Valid ->
           let command = Query_protocol.Type_enclosing (None, pos_start, None) in
-          let config = Mpipeline.final_config pipeline in
+          let config = Merlin_kernel.Mpipeline.final_config pipeline in
           let config =
             { config with query = { config.query with verbosity = 0 } }
           in
-          let pipeline = Mpipeline.make config (Document.source doc) in
+          let pipeline = Merlin_kernel.Mpipeline.make config (Document.source doc) in
           Some (Query_commands.dispatch pipeline command))
   in
   match res with

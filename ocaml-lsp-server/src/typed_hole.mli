@@ -12,4 +12,4 @@ val can_be_hole : string -> bool
 
     [1] leaf node is the head of the list, as
     [Mbrowse.t = (Env.t * Browse_raw.node) list]*)
-val is_a_hole : Mbrowse.t -> bool
+val is_a_hole : Merlin_kernel.Mbrowse.t -> bool
