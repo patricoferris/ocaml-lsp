@@ -1,8 +1,3 @@
-[submodule "ocaml-lsp-server/vendor/merlin"]
-	path = ocaml-lsp-server/vendor/merlin
-	url = https://github.com/rgrinberg/merlin
-	branch = lsp
-	ignore = dirty
 [submodule "submodules/lev"]
 	path = submodules/lev
 	url = https://github.com/rgrinberg/lev.git
