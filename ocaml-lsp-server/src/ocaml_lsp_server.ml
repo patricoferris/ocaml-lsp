@@ -108,7 +108,8 @@ let extract_related_errors uri raw_message =
       match related with
       | [] -> None
       | related ->
-        let make_related ( Ocamlc_loc.{ loc = { path = _; line; chars }; message = message}) =
+        let make_related Ocamlc_loc.{ loc = { path = _; line; chars }; message }
+            =
           let location =
             let start, end_ =
               let line_start, line_end =
@@ -381,7 +382,7 @@ let code_action (state : State.t) (params : CodeActionParams.t) =
   | l -> Some (List.map l ~f:(fun c -> `CodeAction c))
 
 module Formatter = struct
-  let jsonrpc_error (e : My_ocamlformat.error) message =
+  let jsonrpc_error (e : Ocamlformat_bin.error) message =
     let code : Jsonrpc.Response.Error.Code.t =
       match e with
       | Unsupported_syntax _
@@ -393,7 +394,7 @@ module Formatter = struct
     make_error ~code ~message ()
 
   let run rpc doc =
-    let* res = My_ocamlformat.format_doc doc in
+    let* res = Ocamlformat_lib.format_doc doc in
     match res with
     | Ok result -> Fiber.return (Some result)
     | Error library_e -> (
@@ -403,7 +404,7 @@ module Formatter = struct
           let* res = Ocamlformat_rpc.format_doc state.ocamlformat_rpc doc in
           match res with
           | Ok res -> Fiber.return @@ Ok res
-          | Error _ -> My_ocamlformat.run doc
+          | Error _ -> Ocamlformat_bin.run doc
         in
         match res with
         | Ok result -> Fiber.return (Some result)
@@ -414,8 +415,8 @@ module Formatter = struct
                respective errors: \n\
                Using ocamlformat library: %s\n\
                Using ocamlformat binary: %s"
-              (My_ocamlformat.library_message library_e)
-              (My_ocamlformat.message e)
+              (Ocamlformat_lib.library_message library_e)
+              (Ocamlformat_bin.message e)
           in
           let error = jsonrpc_error e message in
           let msg = ShowMessageParams.create ~message ~type_:Warning in

@@ -46,12 +46,14 @@ let code_action (state : State.t) doc (params : CodeActionParams.t) =
     match res with
     | Ok (loc, newText) ->
       let+ newText =
-        let+ formatted_text =
-          Ocamlformat_rpc.format_type state.ocamlformat_rpc ~typ:newText
-        in
+        let* formatted_text = Ocamlformat_lib.format_type newText in
         match formatted_text with
-        | Ok formatted_text -> formatted_text
-        | Error _ -> newText
+        | Ok formatted_text -> Fiber.return formatted_text
+        | Error _ ->
+          let+ formatted_text =
+            Ocamlformat_rpc.format_type state.ocamlformat_rpc ~typ:newText
+          in
+          Result.value ~default:newText formatted_text
       in
       let supportsJumpToNextHole =
         State.experimental_client_capabilities state

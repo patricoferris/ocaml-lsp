@@ -156,21 +156,17 @@ let get_process t =
         "Expected to receive `Started` or `Stopped` after mailing `Start`" [])
 
 let format_type t ~typ =
-  let* res = My_ocamlformat.format_type typ in
-  match res with
-  | Ok e -> Fiber.return (Ok e)
-  | Error _ -> (
-    let* p = get_process t in
-    match p with
-    | Error `No_process -> Fiber.return @@ Error `No_process
-    | Ok p -> (
-      match Process.client p with
-      | `V1 p -> Ocamlformat_rpc.V1.Client.format typ p
-      | `V2 p ->
-        let config = Some type_option in
-        Ocamlformat_rpc.V2.Client.format
-          ~format_args:{ Ocamlformat_rpc_lib.empty_args with config }
-          typ p))
+  let* p = get_process t in
+  match p with
+  | Error `No_process -> Fiber.return @@ Error `No_process
+  | Ok p -> (
+    match Process.client p with
+    | `V1 p -> Ocamlformat_rpc.V1.Client.format typ p
+    | `V2 p ->
+      let config = Some type_option in
+      Ocamlformat_rpc.V2.Client.format
+        ~format_args:{ Ocamlformat_rpc_lib.empty_args with config }
+        typ p)
 
 let format_doc t doc =
   let txt = Document.source doc |> Merlin_kernel.Msource.text in
