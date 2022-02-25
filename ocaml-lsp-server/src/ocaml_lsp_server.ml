@@ -410,10 +410,10 @@ module Formatter = struct
         | Error e ->
           let message =
             Printf.sprintf
-              "Both using the library and the binary failed at formatting the \
-               file. Here are the respective errors: \n\
-               %s\n\
-               %s"
+              "All methods for formatting the file failed. Here are the \
+               respective errors: \n\
+               Using ocamlformat library: %s\n\
+               Using ocamlformat binary: %s"
               (My_ocamlformat.library_message library_e)
               (My_ocamlformat.message e)
           in

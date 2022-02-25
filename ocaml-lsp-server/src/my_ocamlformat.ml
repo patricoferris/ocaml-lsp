@@ -94,11 +94,11 @@ let library_message = function
     let error_string =
       l
       |> List.map ~f:Ocamlformat.Translation_unit.Error.to_string
-      |> String.concat ~sep:"\n"
+      |> String.concat ~sep:"\n- "
     in
-    Printf.sprintf "All attemps at formatting failed: \n%s" error_string
+    Printf.sprintf "All attemps at formatting failed: \n- %s" error_string
   | Building_conf_failed error_string ->
-    Printf.sprintf "Building_conf_failed: \n%s" error_string
+    Printf.sprintf "Building_conf_failed: %s" error_string
 
 type formatter =
   | Reason of Document.Kind.t
@@ -200,7 +200,9 @@ let format_doc doc =
           format ~kind ~input_name:file ~conf source
           |> Result.map_error ~f:(fun err -> All_kinds_failed [ err ])
       in
-      Result.map ~f:(fun to_ -> Diff.edit ~from:source ~to_) formatted_content
+      (* Result.map ~f:(fun to_ -> Diff.edit ~from:source ~to_)
+         formatted_content *)
+      Error (Building_conf_failed "ee")
     | Error e -> Error (Building_conf_failed e))
   | Reason -> Error (Unsupported_in_library Reason)
 
