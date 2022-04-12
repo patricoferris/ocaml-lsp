@@ -56,5 +56,5 @@ pin-depends: [
   # Dune build as oasis doesn't work on OCaml 5.0.0
   [ "omd.dev" "git+https://github.com/patricoferris/omd#7f6758a6699d2630c6b8a3bb963b265863648bca" ]
   # Bumped opam files
-  [ "ocamlformat-rpc-lib" "git+https://github.com/patricoferris/ocamlformat#0f38e0c8f304c1ad652b893bb9e970367dcd0481" ]
+  [ "ocamlformat-rpc-lib.dev" "git+https://github.com/patricoferris/ocamlformat#0f38e0c8f304c1ad652b893bb9e970367dcd0481" ]
 ]
